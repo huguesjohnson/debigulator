@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="paneTop" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.huguesjohnson.debigulatorfx.DebigulatorFXMLController">
+   <top>
+      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Button fx:id="buttonNewSession" mnemonicParsing="false" onAction="#actionNewSession">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/document-new.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="buttonOpenSession" mnemonicParsing="false" onAction="#actionOpenSession">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/document-open.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="buttonSaveSession" mnemonicParsing="false" onAction="#actionSaveSession">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/document-save.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="buttonSaveSessionAs" mnemonicParsing="false" onAction="#actionSaveSessionAs">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/document-save-as.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="buttonHelp" mnemonicParsing="false" onAction="#actionHelp">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@res/help-browser.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+        </items>
+      </ToolBar>
+   </top>
+   <center>
+      <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <items>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Select files to archive" />
+                  <TreeView fx:id="treeviewFileBrowse" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ToolBar prefHeight="40.0" prefWidth="200.0">
+                    <items>
+                        <Button fx:id="buttonAddSelected" mnemonicParsing="false" onAction="#actionAddSelected">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@res/list-add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Button>
+                      <Button fx:id="buttonAddAll" mnemonicParsing="false" onAction="#actionAddAll" text="Add all" visible="false" />
+                        <ChoiceBox fx:id="choiceFilter" prefWidth="150.0" visible="false" />
+                    </items>
+                  </ToolBar>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="List of files to archive" />
+                  <ListView fx:id="listviewFiles" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <ToolBar prefHeight="40.0" prefWidth="200.0">
+                    <items>
+                        <Button fx:id="buttonRemoveSelected" mnemonicParsing="false" onAction="#actionRemoveSelected">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@res/list-remove.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Button>
+                      <Button fx:id="buttonRemoveAll" mnemonicParsing="false" onAction="#actionRemoveAll">
+                           <graphic>
+                              <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@res/edit-clear.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic></Button>
+                    </items>
+                  </ToolBar>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </center>
+   <bottom>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Output directory:">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </Label>
+                  <TextField fx:id="textOutputDirectory" editable="false" HBox.hgrow="SOMETIMES" />
+                  <Button fx:id="buttonBrowse" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#actionBrowse">
+                     <HBox.margin>
+                        <Insets right="4.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@res/folder.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label text="Archive type:">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ChoiceBox fx:id="choiceArchiveType" prefWidth="150.0" />
+                  <Label text="Action after archive:">
+                     <HBox.margin>
+                        <Insets left="12.0" right="4.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ChoiceBox fx:id="choiceActionAfterArchive" prefWidth="150.0">
+                     <HBox.margin>
+                        <Insets right="4.0" />
+                     </HBox.margin></ChoiceBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <CheckBox fx:id="checkboxAppendDate" mnemonicParsing="false" text="Append archive names with date (yyyy-mm-ddz_filename)">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </CheckBox>
+                  <CheckBox fx:id="checkboxEnableDebugLogs" mnemonicParsing="false" text="Enable debug logs" visible="false">
+                     <HBox.margin>
+                        <Insets left="12.0" right="4.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <CheckBox fx:id="checkboxAppendExtension" mnemonicParsing="false" text="Append archive names with original file extension (i.e. filename.ext.zip)">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </CheckBox>
+                  <CheckBox fx:id="checkboxAutomaticallySaveSession" mnemonicParsing="false" text="Automatically save session" visible="false">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                  </CheckBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="buttonCancel" cancelButton="true" mnemonicParsing="false" onAction="#actionCancel" text="Cancel" visible="false" />
+                  <Button fx:id="buttonCreateArchives" mnemonicParsing="false" onAction="#actionCreateArchives" text="Create Archives">
+                     <HBox.margin>
+                        <Insets left="4.0" right="4.0" />
+                     </HBox.margin>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@res/media-playback-start.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>
