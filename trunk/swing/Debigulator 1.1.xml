@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="Debigulator">
+    <!--
+    *****************************************
+    * build script for Debigulator          *
+    * using Apache ANT 1.6.2                *
+    ***************************************** -->    
+    
+    <!--    
+    ****************************************
+    * init:                                *
+    * -set properties                      *
+    *  -source paths                       *
+    *  -output paths                       *
+    *  -package name                       *
+    *  -jar name                           *
+    **************************************** -->    
+    <target name="init">
+        <!-- version -->
+        <property name="majorVersion" value="1.1"/>
+        <property name="minorVersion" value="20070819"/>
+        <property name="version" value="${majorVersion}.${minorVersion}"/>
+        <!-- source paths -->
+        <property name="sourcePath" value="./com/huguesjohnson/"/>
+        <property name="docSourcePath" value="./docs/debigulator/"/>
+        <property name="libSourcePath" value="./lib/"/>
+        <!-- output paths -->
+        <property name="outputPath" value="../Releases/Debigulator/Version ${majorVersion}/"/>
+        <property name="xstreamLibPath" value="/lib/xstream/xstream-1.1.2.jar"/>
+        <property name="docOutputPath" value="${outputPath}/"/>
+        <property name="javaOutputPath" value="${outputPath}/Java/"/>
+    	<property name="docOutputPath" value="${outputPath}/"/>
+        <property name="webDocOutputPath" value="../Web Pages/HuguesJohnson.com/public_html/javadoc/debigulator/"/>
+    	<!-- name of the packages to create -->
+        <property name="packageName" value="Debigulator_${version}.zip"/>
+        <property name="jarName" value="Debigulator_${version}.jar"/>
+    </target>
+	
+    <!--    
+    ****************************************
+    * clean:                               *
+    * -clean the previous build:           *
+    **************************************** -->
+    <target name="clean" depends="init">
+        <!-- delete everything in the output path -->
+        <delete dir="${outputPath}"/>
+        <!-- recreate the output directories -->
+        <mkdir dir="${outputPath}"/>
+        <mkdir dir="${docOutputPath}"/>
+        <mkdir dir="${javaOutputPath}"/>
+    </target>
+
+    <!--    
+    ****************************************
+    * copy_source:                         *
+    * -copy the source code to compile     *
+    **************************************** -->
+    <target name="copy_source" depends="clean">
+        <!-- copy everything in the debigulator package -->
+        <copy todir="${javaOutputPath}/Source/com/huguesjohnson/debigulator/">
+            <fileset dir="${sourcePath}/debigulator/">
+                <include name="**/*.java"/>
+                <include name="**/*.gif"/>
+            </fileset>
+        </copy>
+    	
+        <!-- copy items from other packages -->
+        <copy todir="${javaOutputPath}/Source/com/huguesjohnson/">
+            <fileset dir="${sourcePath}">
+                <include name="BatchCompressionThread.java"/>
+                <include name="BatchCompressionThreadParameters.java"/>
+                <include name="LaunchBrowser.java"/>
+                <include name="LogFile.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${javaOutputPath}/Source/com/huguesjohnson/fileFilter/">
+            <fileset dir="${sourcePath}/fileFilter/">
+                <include name="*.java"/>
+            </fileset>
+        </copy>
+        <copy todir="${javaOutputPath}/Source/com/huguesjohnson/ui/">
+            <fileset dir="${sourcePath}/ui/">
+                <include name="SplashScreen.java"/>
+                <include name="NoFrillsJFileChooser.java"/>
+            </fileset>
+        </copy>
+
+    	<!-- copy over external libraries -->
+        <copy todir="${outputPath}/lib/xstream">
+            <fileset dir="${libSourcePath}/xstream/">
+                <include name="*"/>
+            </fileset>
+        </copy>
+
+    	<!-- copy over the build file -->
+        <copy todir="${javaOutputPath}/Source/">
+            <fileset dir="./">
+                <include name="Debigulator ${majorVersion}.xml"/>
+            </fileset>
+        </copy>                    
+    </target>
+    
+    <!--    
+    ****************************************
+    * compile:                             *
+    * -javac all files                     *
+    **************************************** -->
+    <target name="compile" depends="copy_source">
+
+        <!-- compile Java code -->
+        <javac destdir="${javaOutputPath}/Source/" srcdir="${javaOutputPath}/Source/" debug="off" optimize="on" deprecation="on">
+            <classpath>
+                <pathelement path="${javaOutputPath}/Source/"/>
+                <pathelement path="${outputPath}${xstreamLibPath}"/>
+            </classpath>
+            <include name="**/*.java"/>
+        </javac>
+        
+        <!-- build the jar file -->
+        <jar destfile="${outputPath}/${jarName}">
+            <fileset dir="${javaOutputPath}/Source/">
+                <include name="**/*.class"/>
+                <include name="com/huguesjohnson/debigulator/images/*.gif"/>
+            </fileset>
+            <manifest>
+                <attribute name="Main-Class" value="com/huguesjohnson/debigulator/Debigulator"/>
+                <attribute name="Class-Path" value=".${xstreamLibPath}"/>
+            </manifest>
+        </jar>
+
+        <!-- remove the .class files -->
+        <delete>
+            <fileset dir="${javaOutputPath}/Source/">
+                <include name="**/*.class"/>
+            </fileset>
+        </delete>
+    </target>
+	
+    <!--    
+    ****************************************
+    * build_docs:                          *
+    * -copy the help files                 *
+    * -build javadocs                      *
+    **************************************** -->
+    <!-- <target name="build_docs" depends="copy_source"> -->
+    <target name="build_docs" depends="init">
+        <!-- build javadocs -->
+        <javadoc 
+        	destdir="${webDocOutputPath}/" 
+        	sourcepath="${javaOutputPath}/Source/"
+        	nodeprecatedlist="true"
+        	>
+        	<doctitle><![CDATA[<img src="http://www.huguesjohnson.com/images/logo_debigulator-bluegray.gif">]]></doctitle>
+            <bottom><![CDATA[<i>Copyright &#169; 2000-2007 <a target="_top" href="http://www.huguesjohnson.com/">Hugues Johnson</a></i>]]></bottom>
+        	<classpath>
+                <pathelement path="${javaOutputPath}/Source/"/>
+                <pathelement path="${outputPath}${xstreamLibPath}"/>
+            </classpath>
+        	<fileset dir="${javaOutputPath}/Source/">
+                <include name="**/*.java"/>
+            </fileset>
+        </javadoc>
+    	<!-- override stylesheet and inherit.gif -->
+    	<copy todir="${webDocOutputPath}" overwrite="true">
+            <fileset dir="${docSourcePath}/javadoc-overrides">
+				<include name="**/*"/>
+    		</fileset>
+    	</copy>
+        
+        <!-- copy over help files -->
+        <copy todir="${outputPath}">
+            <fileset dir="${docSourcePath}">
+                <include name="gpl.htm"/>
+                <include name="Readme.html"/>
+            </fileset>
+        </copy>
+    </target>
+	 
+    <!--    
+    ****************************************
+    * package the application:             *
+    * -copy the source code                *
+    * -put everything into a zip file      *
+    **************************************** -->
+	<target name="package" depends="compile,build_docs">
+        <!-- create the full package -->
+        <zip destfile="${outputPath}/${packageName}" basedir="${outputPath}"/>
+    </target>
+
+	<!--    
+    ****************************************
+    * build:                               *
+    * -just call everything in order       *
+    **************************************** -->
+    <target name="build" depends="init,clean,copy_source,compile,build_docs,package"/>
+</project>
