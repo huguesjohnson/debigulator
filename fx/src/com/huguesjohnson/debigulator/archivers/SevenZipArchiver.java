@@ -1,9 +1,9 @@
 /*
-    Debigulator - A batch compression utility
+Debigulator - A batch compression utility
 
-    7-Zip compression & decompression is derived from LzmaAlone.java (7-Zip.org/sdk.html)
+7-Zip compression & decompression is derived from LzmaAlone.java (7-Zip.org/sdk.html)
 
-Copyright (C) 2003-2018 Hugues Johnson
+Copyright (C) 2003-2020 Hugues Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -76,12 +76,14 @@ public class SevenZipArchiver implements Archiver{
                 for(int i=0;i<8;i++){
                     int v=szin.read();
                     if(v<0){
+                        try{if(fout!=null){fout.close();}}catch(Exception x){}
+                        try{if(szin!=null){szin.close();}}catch(Exception x){}
                         throw(new Exception("Can't read stream size"));
                     }
                     outSize|=((long)v)<<(8*i);
                 }
                 if(!decoder.Code(szin,fout,outSize)){
-                    throw new Exception("Error in data stream");
+                    throw(new Exception("Error in data stream"));
                 }
             success=true;
         }catch(Exception x){

@@ -21,4 +21,9 @@ One random day in 2014 I decided I hated the user interface and rewrote it in Ja
 
 ## Development Status
 
-I occasionally update this when there are major releases of Java. The last update was done for Java 8. I will probably the JavaFX version for Java 10 or 11. The Swing version will likely never be updated again.
+I occasionally update this when there are major releases of Java. The last update was done for the JavaFX version on Java 11. The Swing version will likely never be updated again.
+
+## Other Notes
+
+This project uses Tango Icons: https://commons.wikimedia.org/wiki/Tango_icons
+

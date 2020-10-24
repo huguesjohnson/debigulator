@@ -1,6 +1,6 @@
 /*
-    Debigulator - A batch compression utility
-Copyright (C) 2003-2018 Hugues Johnson
+Debigulator - A batch compression utility
+Copyright (C) 2003-2020 Hugues Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -16,7 +16,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class BatchCompressionThreadParameters implements Serializable{
-    /* the list of files to archive */
+	private static final long serialVersionUID = -214546475982764450L;
+	/* the list of files to archive */
     private ArrayList<String> fileList;
     /* the type of archive to write */
     private Enums.ArchiveType archiveType;

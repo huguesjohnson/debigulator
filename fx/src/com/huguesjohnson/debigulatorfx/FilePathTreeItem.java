@@ -1,6 +1,6 @@
 /*
-    Debigulator - A batch compression utility
-Copyright (C) 2003-2018 Hugues Johnson
+Debigulator - A batch compression utility
+Copyright (C) 2003-2020 Hugues Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -34,7 +34,8 @@ public class FilePathTreeItem extends TreeItem<String>{
     private final boolean isDirectory;
     public boolean isDirectory(){return(this.isDirectory);}
     
-    public FilePathTreeItem(File file){
+    @SuppressWarnings({"unchecked","rawtypes"})
+	public FilePathTreeItem(File file){
         super(file.toString());
         this.file=file;
         this.absolutePath=file.getAbsolutePath();
@@ -103,8 +104,9 @@ public class FilePathTreeItem extends TreeItem<String>{
             if (files!=null){
                 ObservableList<FilePathTreeItem> children=FXCollections.observableArrayList();
                 for(File childFile:files){
-                    children.add(new FilePathTreeItem(childFile));
+               		children.add(new FilePathTreeItem(childFile));
                 }
+                children.sort(new FilePathTreeItemComparator());
                 return(children);
             }
         }

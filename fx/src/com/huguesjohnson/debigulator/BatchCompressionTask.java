@@ -1,6 +1,6 @@
 /*
-    Debigulator - A batch compression utility
-Copyright (C) 2003-2018 Hugues Johnson
+Debigulator - A batch compression utility
+Copyright (C) 2003-2020 Hugues Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -42,7 +42,7 @@ public class BatchCompressionTask extends Task<Void>{
         this.debug=this.parameters.getWriteDebugLog();
         if(this.debug){
             try{
-                FileHandler fh=new FileHandler(this.getClass().getSimpleName()+"_debug.log", false);
+                FileHandler fh=new FileHandler(this.parameters.getOutputDirectory()+"debigulator"+System.currentTimeMillis()+"_debug.log", false);
                 fh.setFormatter(new SimpleFormatter());
                 logger.addHandler(fh);
                 logger.setLevel(Level.ALL);
@@ -123,8 +123,7 @@ public class BatchCompressionTask extends Task<Void>{
                     this.log("Deleted "+shortSourceFileName);
                 }
              }catch(Exception x){
-                x.printStackTrace();
-                this.log(x.toString());
+            	 this.logError(x);
             }            
         }
         this.updateProgress(size,size);
@@ -135,7 +134,23 @@ public class BatchCompressionTask extends Task<Void>{
         if(this.debug){
             logger.log(Level.INFO,line);
         }
-    }    
+    }
+    
+    private void logError(Exception x){
+        if(this.debug){
+            logger.log(Level.SEVERE,x.getMessage());
+            StringBuilder sb=new StringBuilder();
+            sb.append(x.getMessage());
+            StackTraceElement[] st=x.getStackTrace();
+            for(int i=(st.length-1);i>=0;i--){
+            	sb.append('\n');
+            	sb.append(st[i]);
+            }
+            logger.log(Level.SEVERE,sb.toString());
+        }else{
+        	x.printStackTrace();
+        }
+    }
     
     private String buildOutputFileName(String sourceFileName,BatchCompressionThreadParameters parameters){
         StringBuffer outputFileName=new StringBuffer();
@@ -196,7 +211,6 @@ public class BatchCompressionTask extends Task<Void>{
     
     private boolean compareFiles(File originalFile,File compareFile){
         /* compare file lengths first */
-        String shortName=originalFile.getName();
         long fileLength=originalFile.length();
         if(fileLength!=compareFile.length()){
             this.log("  (fileLength!=extractedFile.length())");
@@ -225,10 +239,10 @@ public class BatchCompressionTask extends Task<Void>{
                 }
                 this.log("  verified after byte compare="+verified);    
             }catch(Exception x){
-                this.log(x.getMessage());
+            	this.logError(x);
             }finally{
-                try{if(fInOriginal!=null){fInOriginal.close();}}catch(Exception x){this.log(x.getMessage());}
-                try{if(fInCompare!=null){fInCompare.close();}}catch(Exception x){this.log(x.getMessage());}
+                try{if(fInOriginal!=null){fInOriginal.close();}}catch(Exception x){this.logError(x);}
+                try{if(fInCompare!=null){fInCompare.close();}}catch(Exception x){this.logError(x);}
             }
             return(verified);
         }

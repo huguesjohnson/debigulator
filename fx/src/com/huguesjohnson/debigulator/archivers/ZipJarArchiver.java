@@ -1,6 +1,6 @@
 /*
-    Debigulator - A batch compression utility
-Copyright (C) 2003-2018 Hugues Johnson
+Debigulator - A batch compression utility
+Copyright (C) 2003-2020 Hugues Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -47,10 +47,7 @@ public class ZipJarArchiver implements Archiver{
             /* generate CRC */
             CRC32 crc=new CRC32();
             fin=new FileInputStream(inputFile);
-            int availableBytes=fin.available();
             int length;
-            int bytesRead=0;
-            int lastPercentComplete=-1;
             while((length=fin.read(buffer))>-1){
                 crc.update(buffer,0,length);
             }

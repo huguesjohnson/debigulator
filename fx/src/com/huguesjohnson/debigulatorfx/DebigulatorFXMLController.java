@@ -1,6 +1,6 @@
 /*
-    Debigulator - A batch compression utility
-Copyright (C) 2003-2018 Hugues Johnson
+Debigulator - A batch compression utility
+Copyright (C) 2003-2020 Hugues Johnson
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -194,15 +194,39 @@ public class DebigulatorFXMLController{
         for(int i=0;i<indices.size();i++){
             int index=indices.get(i);
             if(index>0){//don't add the root item
-                FilePathTreeItem item=(FilePathTreeItem)this.treeviewFileBrowse.getTreeItem(index);
-                if(!item.isDirectory()){
-                    String absolutePath=item.getAbsolutePath();
-                    if(!this.listviewFiles.getItems().contains(absolutePath)){
-                        this.listviewFiles.getItems().add(item.getAbsolutePath());
-                    }
-                }
+                addItem((FilePathTreeItem)this.treeviewFileBrowse.getTreeItem(index));
             }
         }
+    }
+    
+    //sorts out if the item being added is a file or directory
+    private void addItem(FilePathTreeItem item){
+    	if(item.isDirectory()){
+    		addDirectory(item.getFile());
+    	}else{
+    		addFilePath(item.getAbsolutePath());
+        }
+    }
+    
+    //add all files in a directory
+    private void addDirectory(File dir){
+    	for(final File f:dir.listFiles()){
+    		if(f.isDirectory()){
+    			addDirectory(f);
+            }else{
+            	addFilePath(f.getAbsolutePath());
+            }
+        }
+    	
+    }
+    
+    //adds a file to the list of things to archive
+    private void addFilePath(String absolutePath){
+        //prevent duplicate entries
+    	if(!this.listviewFiles.getItems().contains(absolutePath)){
+            this.listviewFiles.getItems().add(absolutePath);
+        }
+    	
     }
 
     @FXML
@@ -358,6 +382,10 @@ public class DebigulatorFXMLController{
         this.choiceActionAfterArchive.getSelectionModel().select(0);
         //set file list to multi-select
         this.listviewFiles.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //determine whether to show the help button
+        if(!Desktop.isDesktopSupported()||(!Desktop.getDesktop().isSupported(Desktop.Action.BROWSE))){
+        	this.buttonHelp.setVisible(false);
+        }
     }
 
     public DebigulatorSession getSession(){
